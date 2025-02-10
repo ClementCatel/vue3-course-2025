@@ -1,13 +1,18 @@
 <script setup>
+import { ref } from 'vue';
+
+const text = ref("");
 </script>
 
 <template>
   <main>
     <div class="container">
       <form>
-        <textarea name="post" id="post-textarea" rows="1" placeholder="Quoi de neuf ?"></textarea>
+        <textarea name="post" id="post-textarea" rows="1" placeholder="Quoi de neuf ?" v-model="text"></textarea>
         <button type="submit">Poster</button>
       </form>
+
+      <p>{{ text }}</p>
     </div>
   </main>
 </template>
