@@ -7,7 +7,7 @@ const trimmedText = computed(() => text.value.trim());
 const posts = ref([]);
 
 const submitPost = () => {
-  posts.value.push(trimmedText.value);
+  posts.value.unshift(trimmedText.value);
   text.value = "";
 };
 </script>
@@ -92,5 +92,8 @@ hr {
 article {
   padding: 0.75rem 1.5rem;
   border-bottom: 1px solid var(--color-border);
+}
+article > p {
+  white-space: pre-wrap;
 }
 </style>
