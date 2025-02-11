@@ -1,18 +1,36 @@
 <script setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 const text = ref("");
+const trimmedText = computed(() => text.value.trim());
+
+const posts = ref([]);
+
+const submitPost = () => {
+  posts.value.push(trimmedText.value);
+  text.value = "";
+};
 </script>
 
 <template>
   <main>
     <div class="container">
-      <form>
+      <form @submit.prevent="submitPost">
         <textarea name="post" id="post-textarea" rows="1" placeholder="Quoi de neuf ?" v-model="text"></textarea>
-        <button type="submit">Poster</button>
+        <button type="submit" :disabled="!trimmedText">Poster</button>
       </form>
 
-      <p>{{ text }}</p>
+      <hr>
+
+      <section>
+        <div v-if="!posts.length" class="feed__empty">
+          <p>Aucun post pour le moment.</p>
+        </div>
+
+        <article v-for="post in posts" :key="post">
+          <p>{{ post }}</p>
+        </article>
+      </section>
     </div>
   </main>
 </template>
@@ -22,7 +40,7 @@ const text = ref("");
   background-color: var(--color-bg-secondary);
   border-left: 1px solid var(--color-border);
   border-right: 1px solid var(--color-border);
-  height: 100vh;
+  min-height: 100vh;
   margin: 0 auto;
   max-width: 640px;
 }
@@ -42,6 +60,7 @@ textarea {
   outline: none;
   padding: 0.5rem;
   resize: none;
+  field-sizing: content;
 }
 button {
   align-self: flex-end;
@@ -53,5 +72,25 @@ button {
   font-size: 1rem;
   height: 40px;
   padding: 0 1rem;
+}
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 0;
+}
+
+.feed__empty {
+  padding: 1.5rem;
+  text-align: center;
+}
+
+article {
+  padding: 0.75rem 1.5rem;
+  border-bottom: 1px solid var(--color-border);
 }
 </style>
