@@ -1,5 +1,6 @@
 <script setup>
 import { computed, ref } from 'vue';
+import AppPost from './components/AppPost.vue';
 
 const user = {
   username: "Clément Catel",
@@ -25,7 +26,7 @@ const submitPost = () => {
 <template>
   <main>
     <div class="container">
-      <form @submit.prevent="submitPost">
+      <form @submit.prevent="submitPost" class="card">
         <div class="form-group">
           <img
             :src="user.avatar"
@@ -39,28 +40,12 @@ const submitPost = () => {
         <button type="submit" :disabled="!trimmedText">Poster</button>
       </form>
 
-      <hr>
-
-      <section>
+      <section class="card">
         <div v-if="!posts.length" class="feed__empty">
           <p>Aucun post pour le moment.</p>
         </div>
 
-        <article v-for="post in posts" :key="post.id">
-          <div>
-            <img
-              :src="post.user.avatar"
-              :alt="`${post.user.username} avatar picture`"
-              width="36"
-              height="36"
-              class="user-avatar"
-            >
-          </div>
-          <div>
-            <strong>{{ post.user.username }}</strong>
-            <p>{{ post.text }}</p>
-          </div>
-        </article>
+        <AppPost v-for="post in posts" :key="post.id" :post="post" />
       </section>
     </div>
   </main>
@@ -68,22 +53,26 @@ const submitPost = () => {
 
 <style scoped>
 .container {
-  background-color: var(--color-bg-secondary);
-  border-left: 1px solid var(--color-border);
-  border-right: 1px solid var(--color-border);
   min-height: 100vh;
   margin: 0 auto;
   max-width: 640px;
 }
 
+.card {
+  background-color: var(--color-bg-secondary);
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+  margin-bottom: 1rem;
+}
+
 form {
   display: flex;
   flex-direction: column;
+  margin-top: 1rem;
   padding: 1rem 1.5rem;
   width: 100%;
 }
 .form-group {
-  align-items: center;
   display: flex;
   gap: 0.75rem;
   margin-bottom: 1rem;
@@ -103,18 +92,15 @@ button {
   background: none;
   border-radius: 10px;
   border: 1px solid var(--color-border);
-  color: var(--color-text-secondary);
+  color: var(--color-text-primary);
   cursor: pointer;
   font-size: 1rem;
   height: 40px;
   padding: 0 1rem;
 }
-button:enabled:hover {
-  color: var(--color-text-primary);
-}
 button:disabled {
   cursor: not-allowed;
-  opacity: 0.3;
+  opacity: 0.4;
 }
 
 hr {
@@ -126,16 +112,6 @@ hr {
 .feed__empty {
   padding: 1.5rem;
   text-align: center;
-}
-
-article {
-  border-bottom: 1px solid var(--color-border);
-  display: flex;
-  gap: 0.75rem;
-  padding: 0.75rem 1.5rem;
-}
-article > p {
-  white-space: pre-wrap;
 }
 
 .user-avatar {
