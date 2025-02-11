@@ -67,11 +67,14 @@ button {
   background: none;
   border-radius: 10px;
   border: 1px solid var(--color-border);
-  color: var(--color-text-primary);
+  color: var(--color-text-secondary);
   cursor: pointer;
   font-size: 1rem;
   height: 40px;
   padding: 0 1rem;
+}
+button:enabled:hover {
+  color: var(--color-text-primary);
 }
 button:disabled {
   cursor: not-allowed;
