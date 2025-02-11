@@ -1,13 +1,23 @@
 <script setup>
 import { computed, ref } from 'vue';
 
+const user = {
+  username: "Clément Catel",
+  avatar: "https://yakovmerkin.com/wp-content/uploads/2021/02/erwin-smith-2.jpg",
+}
+
 const text = ref("");
 const trimmedText = computed(() => text.value.trim());
 
 const posts = ref([]);
 
 const submitPost = () => {
-  posts.value.unshift(trimmedText.value);
+  const newPost = {
+    id: posts.value.length + 1,
+    text: trimmedText.value,
+    user,
+  };
+  posts.value.unshift(newPost);
   text.value = "";
 };
 </script>
@@ -16,7 +26,16 @@ const submitPost = () => {
   <main>
     <div class="container">
       <form @submit.prevent="submitPost">
-        <textarea name="post" id="post-textarea" rows="1" placeholder="Quoi de neuf ?" v-model="text"></textarea>
+        <div class="form-group">
+          <img
+            :src="user.avatar"
+            :alt="`${user.username} avatar picture`"
+            width="36"
+            height="36"
+            class="user-avatar"
+          >
+          <textarea name="post" id="post-textarea" rows="1" placeholder="Quoi de neuf ?" v-model="text"></textarea>
+        </div>
         <button type="submit" :disabled="!trimmedText">Poster</button>
       </form>
 
@@ -27,8 +46,20 @@ const submitPost = () => {
           <p>Aucun post pour le moment.</p>
         </div>
 
-        <article v-for="post in posts" :key="post">
-          <p>{{ post }}</p>
+        <article v-for="post in posts" :key="post.id">
+          <div>
+            <img
+              :src="post.user.avatar"
+              :alt="`${post.user.username} avatar picture`"
+              width="36"
+              height="36"
+              class="user-avatar"
+            >
+          </div>
+          <div>
+            <strong>{{ post.user.username }}</strong>
+            <p>{{ post.text }}</p>
+          </div>
         </article>
       </section>
     </div>
@@ -51,14 +82,19 @@ form {
   padding: 1rem 1.5rem;
   width: 100%;
 }
+.form-group {
+  align-items: center;
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
 textarea {
   background: none;
   border: none;
   color: var(--color-text-primary);
   flex: 1;
-  margin-bottom: 1rem;
   outline: none;
-  padding: 0.5rem;
+  padding: 0.5rem 0;
   resize: none;
   field-sizing: content;
 }
@@ -78,7 +114,7 @@ button:enabled:hover {
 }
 button:disabled {
   cursor: not-allowed;
-  opacity: 0.5;
+  opacity: 0.3;
 }
 
 hr {
@@ -93,10 +129,17 @@ hr {
 }
 
 article {
-  padding: 0.75rem 1.5rem;
   border-bottom: 1px solid var(--color-border);
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.75rem 1.5rem;
 }
 article > p {
   white-space: pre-wrap;
+}
+
+.user-avatar {
+  border-radius: 50%;
+  object-fit: cover;
 }
 </style>
