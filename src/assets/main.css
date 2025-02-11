@@ -68,11 +68,11 @@ h6 {
 }
 
 :root {
-  --color-bg-primary: #08090a;
-  --color-bg-secondary: #131315;
-  --color-bg-tertiary: #1c1c1d;
-  --color-border: #23252a;
-  --color-text-primary: #f7f8f8;
+  --color-bg-primary: #0a0a0a;
+  --color-bg-secondary: #181818;
+  --color-bg-tertiary: #1a1a1a;
+  --color-border: #383839;
+  --color-text-primary: #f2f5f7;
   --color-text-secondary: #8a8f98;
   --color-accent: #ff0034;
 }
@@ -91,7 +91,7 @@ body,
 body {
   background: var(--color-bg-primary);
   color: var(--color-text-primary);
-  font-family: Outfit, sans-serif;
+  font-family: Inter, sans-serif;
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
