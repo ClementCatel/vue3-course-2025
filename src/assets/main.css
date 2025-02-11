@@ -68,10 +68,10 @@ h6 {
 }
 
 :root {
-  --color-bg-primary: #0a0a0a;
-  --color-bg-secondary: #181818;
-  --color-bg-tertiary: #1a1a1a;
-  --color-border: #383839;
+  --color-bg-primary: #17181c;
+  --color-bg-secondary: #1e1f23;
+  --color-bg-tertiary: ##27282e;
+  --color-border: #2e3136;
   --color-text-primary: #f2f5f7;
   --color-text-secondary: #8a8f98;
   --color-accent: #ff0034;
