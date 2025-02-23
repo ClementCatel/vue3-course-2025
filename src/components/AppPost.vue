@@ -3,7 +3,7 @@ defineProps(["post"]);
 </script>
 
 <template>
-  <article>
+  <article class="card">
     <img
       :src="post.user.avatar"
       :alt="`${post.user.username} avatar picture`"
@@ -24,9 +24,6 @@ article {
   gap: 0.75rem;
   padding: 0.75rem 1.5rem;
   overflow: hidden;
-}
-article:not(:last-child) {
-  border-bottom: 1px solid var(--color-border);
 }
 article p {
   white-space: pre-wrap;

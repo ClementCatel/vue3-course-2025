@@ -11,14 +11,18 @@ const text = ref("");
 const trimmedText = computed(() => text.value.trim());
 
 const posts = ref([]);
+const orderedPosts = computed(() => {
+  return posts.value.slice().sort((a, b) => b.createdAt - a.createdAt)
+})
 
 const submitPost = () => {
   const newPost = {
     id: posts.value.length + 1,
     text: trimmedText.value,
+    createdAt: Date.now(),
     user,
   };
-  posts.value.unshift(newPost);
+  posts.value.push(newPost);
   text.value = "";
 };
 </script>
@@ -35,18 +39,14 @@ const submitPost = () => {
             height="36"
             class="user-avatar"
           >
-          <textarea name="post" id="post-textarea" rows="1" placeholder="Quoi de neuf ?" v-model="text"></textarea>
+          <textarea name="post" id="post-textarea" rows="1" placeholder="Quoi de neuf ?" maxlength="200" v-model="text"></textarea>
         </div>
         <button type="submit" :disabled="!trimmedText">Poster</button>
       </form>
 
-      <section class="card">
-        <div v-if="!posts.length" class="feed__empty">
-          <p>Aucun post pour le moment.</p>
-        </div>
+      <p v-if="!posts.length" class="feed__empty">Aucun post pour le moment.</p>
 
-        <AppPost v-for="post in posts" :key="post.id" :post="post" />
-      </section>
+      <AppPost v-for="post in orderedPosts" :key="post.id" :post="post" />
     </div>
   </main>
 </template>
