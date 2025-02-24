@@ -1,8 +1,15 @@
 <script setup>
 import { TrashIcon } from "@heroicons/vue/16/solid";
+import { useRouter } from "vue-router"
+
+const router = useRouter();
 
 defineProps(["post"]);
 const emit = defineEmits(["delete"]);
+
+const goToUserProfile = () => {
+  router.push({ name: "user-profile"});
+}
 </script>
 
 <template>
@@ -16,7 +23,7 @@ const emit = defineEmits(["delete"]);
     >
     <div class="post-content">
       <header class="post-header">
-        <strong>{{ post.user.username }}</strong>
+        <a @click="goToUserProfile" class="user-link">{{ post.user.username }}</a>
         <button class="delete-post" @click="emit('delete', post.id)">
           <TrashIcon />
         </button>
@@ -53,6 +60,13 @@ article:hover .delete-post {
   border-radius: 50%;
   margin-top: 0.25rem;
   object-fit: cover;
+}
+.user-link {
+  cursor: pointer;
+  font-weight: bold;
+}
+.user-link:hover {
+  text-decoration: underline;
 }
 
 .delete-post {
