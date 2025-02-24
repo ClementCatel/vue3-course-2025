@@ -17,7 +17,7 @@ const orderedPosts = computed(() => {
 
 const submitPost = () => {
   const newPost = {
-    id: posts.value.length + 1,
+    id: Math.random().toString(36).substring(2),
     text: trimmedText.value,
     createdAt: Date.now(),
     user,
@@ -25,6 +25,10 @@ const submitPost = () => {
   posts.value.push(newPost);
   text.value = "";
 };
+
+const deletePost = (id) => {
+  posts.value = posts.value.filter((post) => post.id !== id);
+}
 </script>
 
 <template>
@@ -46,7 +50,7 @@ const submitPost = () => {
 
       <p v-if="!posts.length" class="feed__empty">Aucun post pour le moment.</p>
 
-      <AppPost v-for="post in orderedPosts" :key="post.id" :post="post" />
+      <AppPost v-for="post in orderedPosts" :key="post.id" :post="post" @delete="deletePost" />
     </div>
   </main>
 </template>
@@ -56,6 +60,7 @@ const submitPost = () => {
   min-height: 100vh;
   margin: 0 auto;
   max-width: 640px;
+  padding: 0 1rem;
 }
 
 .card {

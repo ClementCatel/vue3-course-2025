@@ -1,5 +1,8 @@
 <script setup>
+import { TrashIcon } from "@heroicons/vue/16/solid";
+
 defineProps(["post"]);
+const emit = defineEmits(["delete"]);
 </script>
 
 <template>
@@ -12,7 +15,12 @@ defineProps(["post"]);
       class="user-avatar"
     >
     <div class="post-content">
-      <strong>{{ post.user.username }}</strong>
+      <header class="post-header">
+        <strong>{{ post.user.username }}</strong>
+        <button class="delete-post" @click="emit('delete', post.id)">
+          <TrashIcon />
+        </button>
+      </header>
       <p>{{ post.text }}</p>
     </div>
   </article>
@@ -28,13 +36,34 @@ article {
 article p {
   white-space: pre-wrap;
 }
+article:hover .delete-post {
+  display: block;
+}
+
 .post-content {
   overflow: hidden;
+  width: 100%;
+}
+.post-header {
+  display: flex;
+  justify-content: space-between;
 }
 
 .user-avatar {
   border-radius: 50%;
   margin-top: 0.25rem;
   object-fit: cover;
+}
+
+.delete-post {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: none;
+  width: 24px;
+  color: var(--color-text-primary);
+}
+.delete-post:hover {
+  color: var(--color-accent);
 }
 </style>
