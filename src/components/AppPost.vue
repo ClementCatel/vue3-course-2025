@@ -5,11 +5,11 @@ import { useRouter } from "vue-router"
 
 const router = useRouter();
 
-defineProps(["post"]);
+const props = defineProps(["post"]);
 const emit = defineEmits(["delete", "like"]);
 
 const goToUserProfile = () => {
-  router.push({ name: "user-profile"});
+  router.push({ name: "user-profile", params: { username: props.post.user.username } });
 }
 </script>
 
