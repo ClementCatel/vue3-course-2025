@@ -17,17 +17,17 @@ const goToUserProfile = () => {
   <article class="card">
     <header>
       <img
-        :src="post.user.avatar"
-        :alt="`${post.user.username} avatar picture`"
+        :src="post.author.avatarUrl"
+        :alt="`${post.author.username} avatar picture`"
         width="36"
         height="36"
         class="avatar"
       >
-      <a @click="goToUserProfile">{{ post.user.username }}</a>
+      <a @click="goToUserProfile">{{ post.author.username }}</a>
       <small>{{ new Date(post.createdAt).toLocaleDateString() }}</small>
     </header>
 
-    <p>{{ post.text }}</p>
+    <p>{{ post.content }}</p>
 
     <footer>
       <button class="btn-icon" :class="{'active': post.liked}" @click="() => emit('like', post.id)">

@@ -36,6 +36,20 @@ const likePost = (id) => {
   if (!post) return;
   post.liked = !post.liked;
 }
+
+const loading = ref(false);
+const apiPosts = ref([]);
+function fetchPosts() {
+  loading.value = true;
+  fetch("https://posts-crud-api.vercel.app/posts")
+    .then((response) => response.json())
+    .then((data) => {
+      apiPosts.value = data;
+      loading.value = false;
+    });
+}
+
+fetchPosts();
 </script>
 
 <template>
@@ -46,9 +60,11 @@ const likePost = (id) => {
         <button type="submit" :disabled="!trimmedText">Poster</button>
       </form>
 
-      <p v-if="!posts.length">Aucun post pour le moment.</p>
+      <p v-if="loading">Chargement...</p>
 
-      <AppPost v-for="post in orderedPosts" :key="post.id" :post="post" @delete="deletePost" @like="likePost" />
+      <p v-else-if="!apiPosts.length">Aucun post pour le moment.</p>
+
+      <AppPost v-for="post in apiPosts" :key="post.id" :post="post" @delete="deletePost" @like="likePost" />
     </div>
   </main>
 </template>
