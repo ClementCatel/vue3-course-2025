@@ -1,50 +1,39 @@
 <script setup>
-import { computed, ref } from 'vue';
-import AppPost from '@/components/AppPost.vue';
+import { ref } from "vue";
+import AppPost from "@/components/AppPost.vue";
+import PostForm from "@/components/PostForm.vue";
+import { useUserData } from "@/composables/useUserData";
 
-const user = {
-  username: "Clément Catel",
-  avatar: "https://yakovmerkin.com/wp-content/uploads/2021/02/erwin-smith-2.jpg",
+const { user } = useUserData();
+
+// Les likes de l'utilisateur sont gérés en local pour une meilleure réactivité cf. src/components/AppPost.vue
+// La vraie donnée sera mise à jour après avoir refetch les posts
+function handleLike(postId) {
+  const post = posts.value.find((post) => post.id === postId);
+  if (!post) return;
+  const like = post.likes.find((like) => like.userId === user.id);
+  // Si l'utilisateur a déjà liké le post, on retire son like sinon on l'ajoute
+  if (like) {
+    post.likes = post.likes.filter((like) => like.userId !== user.id);
+  } else {
+    post.likes.push({ userId: user.id });
+  }
 }
 
-const text = ref("");
-const trimmedText = computed(() => text.value.trim());
+// Même chose que pour les likes, on retire le post en local avant de faire la requête cf. src/components/AppPost.vue
+function handleDelete(postId) {
+  posts.value = posts.value.filter((post) => post.id !== postId);
+}
 
 const posts = ref([]);
-const orderedPosts = computed(() => {
-  return posts.value.slice().sort((a, b) => b.createdAt - a.createdAt)
-})
-
-const submitPost = () => {
-  const newPost = {
-    id: Math.random().toString(36).substring(2),
-    text: trimmedText.value,
-    createdAt: Date.now(),
-    liked: false,
-    user,
-  };
-  posts.value.push(newPost);
-  text.value = "";
-};
-
-const deletePost = (id) => {
-  posts.value = posts.value.filter((post) => post.id !== id);
-}
-
-const likePost = (id) => {
-  const post = posts.value.find((post) => post.id === id);
-  if (!post) return;
-  post.liked = !post.liked;
-}
 
 const loading = ref(false);
-const apiPosts = ref([]);
 function fetchPosts() {
   loading.value = true;
   fetch("https://posts-crud-api.vercel.app/posts")
     .then((response) => response.json())
     .then((data) => {
-      apiPosts.value = data;
+      posts.value = data;
       loading.value = false;
     });
 }
@@ -53,18 +42,16 @@ fetchPosts();
 </script>
 
 <template>
-  <main>
-    <div class="container">
-      <form @submit.prevent="submitPost" class="card">
-        <textarea name="post" id="post-textarea" rows="1" placeholder="Quoi de neuf ?" maxlength="200" v-model="text"></textarea>
-        <button type="submit" :disabled="!trimmedText">Poster</button>
-      </form>
+  <PostForm @success="posts.unshift($event)" />
 
-      <p v-if="loading">Chargement...</p>
+  <p v-if="loading && !posts.length">Chargement...</p>
+  <p v-else-if="!posts.length">Aucun post pour le moment.</p>
 
-      <p v-else-if="!apiPosts.length">Aucun post pour le moment.</p>
-
-      <AppPost v-for="post in apiPosts" :key="post.id" :post="post" @delete="deletePost" @like="likePost" />
-    </div>
-  </main>
+  <AppPost
+    v-for="post in posts"
+    :key="post.id"
+    :post="post"
+    @like="handleLike"
+    @delete="handleDelete"
+  />
 </template>
